@@ -12,6 +12,7 @@ from llama_index import (
     VectorStoreIndex,
     StorageContext,
 )
+from llama_index.query_engine import BaseQueryEngine
 from llama_index.indices.base import BaseIndex
 
 
@@ -21,7 +22,7 @@ def build_sentence_window_index(
     embed_model="local:BAAI/bge-small-en-v1.5",
     save_dir="sentence_index",
     window_size=3,
-):
+) -> VectorStoreIndex | BaseIndex:
     # create the sentence window node parser w/ default settings
     node_parser = SentenceWindowNodeParser.from_defaults(
         window_size=window_size,
@@ -51,7 +52,7 @@ def get_sentence_window_query_engine(
     sentence_index: VectorStoreIndex | BaseIndex,
     similarity_top_k=6,
     rerank_top_n=2,
-):
+) -> BaseQueryEngine:
     # define postprocessors
     postproc = MetadataReplacementPostProcessor(target_metadata_key="window")
     rerank = SentenceTransformerRerank(
