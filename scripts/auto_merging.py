@@ -51,7 +51,9 @@ def get_automerging_query_engine(
     similarity_top_k=12,
     rerank_top_n=2,
 ) -> RetrieverQueryEngine:
-    base_retriever = automerging_index.as_retriever(similarity_top_k=similarity_top_k)
+    base_retriever = automerging_index.as_retriever(
+        similarity_top_k=similarity_top_k, streaming=True
+    )
     retriever = AutoMergingRetriever(
         base_retriever, automerging_index.storage_context, verbose=True
     )

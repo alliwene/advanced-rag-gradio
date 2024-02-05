@@ -60,6 +60,8 @@ def get_sentence_window_query_engine(
     )
 
     sentence_window_engine = sentence_index.as_query_engine(
-        similarity_top_k=similarity_top_k, node_postprocessors=[postproc, rerank]
+        similarity_top_k=similarity_top_k,
+        node_postprocessors=[postproc, rerank],
+        streaming=True,
     )
     return sentence_window_engine
