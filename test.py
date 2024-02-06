@@ -3,7 +3,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-from llama_index import SimpleDirectoryReader, Document
+from llama_index import SimpleDirectoryReader
 from llama_index.llms import OpenAI
 
 import openai
@@ -23,13 +23,12 @@ documents = SimpleDirectoryReader(
     input_files=["pdfs/eBook-How-to-Build-a-Career-in-AI.pdf"]
 ).load_data()
 
-document = Document(text="\n\n".join([doc.text for doc in documents]))
 
 llm = OpenAI(model="gpt-3.5-turbo", temperature=0.1)
 
 
 # Basic RAG
-basic_index = build_basic_rag_index(document, llm)
+basic_index = build_basic_rag_index(documents, llm)
 query_engine = get_basic_rag_query_engine(basic_index)
 
 response = query_engine.query("What is the importance of networking in AI?")
