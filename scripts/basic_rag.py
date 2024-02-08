@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import List, cast
 
 from llama_index import (
     Document,
@@ -27,10 +27,10 @@ def build_basic_rag_index(
         )
         index.storage_context.persist(persist_dir=save_dir)
     else:
-        index = load_index_from_storage(
+        index = cast(VectorStoreIndex, load_index_from_storage(
             StorageContext.from_defaults(persist_dir=save_dir),
             service_context=service_context,
-        )
+        ))
 
     return index
 

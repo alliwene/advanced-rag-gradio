@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import List, cast
 
 from llama_index import (
     load_index_from_storage,
@@ -13,6 +13,7 @@ from llama_index.node_parser import HierarchicalNodeParser, get_leaf_nodes
 from llama_index.retrievers import AutoMergingRetriever
 from llama_index.query_engine import RetrieverQueryEngine
 from llama_index.indices.base import BaseIndex
+from llama_index.indices.vector_store.retrievers.retriever import VectorIndexRetriever
 
 
 def build_automerging_index(
@@ -39,9 +40,12 @@ def build_automerging_index(
         )
         automerging_index.storage_context.persist(persist_dir=save_dir)
     else:
-        automerging_index = load_index_from_storage(
-            StorageContext.from_defaults(persist_dir=save_dir),
-            service_context=merging_context,
+        automerging_index = cast(
+            VectorStoreIndex,
+            load_index_from_storage(
+                StorageContext.from_defaults(persist_dir=save_dir),
+                service_context=merging_context,
+            ),
         )
     return automerging_index
 
@@ -55,7 +59,7 @@ def get_automerging_query_engine(
         similarity_top_k=similarity_top_k, streaming=True
     )
     retriever = AutoMergingRetriever(
-        base_retriever, automerging_index.storage_context, verbose=True
+        cast(VectorIndexRetriever, base_retriever), automerging_index.storage_context, verbose=True
     )
     rerank = SentenceTransformerRerank(
         top_n=rerank_top_n, model="BAAI/bge-reranker-base"
