@@ -21,7 +21,7 @@ def build_automerging_index(
     llm,
     embed_model="local:BAAI/bge-small-en-v1.5",
     save_dir="merging_index",
-    chunk_sizes=None,
+    chunk_sizes: List[int] | None = None,
 ) -> VectorStoreIndex | BaseIndex:
     chunk_sizes = chunk_sizes or [2048, 512, 128]
     node_parser = HierarchicalNodeParser.from_defaults(chunk_sizes=chunk_sizes)
@@ -59,7 +59,9 @@ def get_automerging_query_engine(
         similarity_top_k=similarity_top_k, streaming=True
     )
     retriever = AutoMergingRetriever(
-        cast(VectorIndexRetriever, base_retriever), automerging_index.storage_context, verbose=True
+        cast(VectorIndexRetriever, base_retriever),
+        automerging_index.storage_context,
+        verbose=True,
     )
     rerank = SentenceTransformerRerank(
         top_n=rerank_top_n, model="BAAI/bge-reranker-base"
