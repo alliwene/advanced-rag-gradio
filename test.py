@@ -5,6 +5,8 @@ warnings.filterwarnings("ignore")
 
 from llama_index import SimpleDirectoryReader
 from llama_index.llms import OpenAI
+from llama_index import VectorStoreIndex, SimpleDirectoryReader, ServiceContext
+from llama_index.chat_engine.types import ChatMode
 
 import openai
 
@@ -27,23 +29,12 @@ documents = SimpleDirectoryReader(
 llm = OpenAI(model="gpt-3.5-turbo", temperature=0.1)
 
 
-# Basic RAG
-basic_index = build_basic_rag_index(documents, llm)
-query_engine = get_basic_rag_query_engine(basic_index)
+# Necessary to use the latest OpenAI models that support function calling API
+service_context = ServiceContext.from_defaults(llm=llm)
+index = VectorStoreIndex.from_documents(documents, service_context=service_context)
 
-response = query_engine.query("What is the importance of networking in AI?")
+chat_engine = index.as_chat_engine(chat_mode=ChatMode.OPENAI, verbose=True)
 
-response.print_response_stream()
-# pprint(response.print_response_stream())
-
-# Sentence Window
-# sentence_index = build_sentence_window_index(document, llm)
-# query_engine = get_sentence_window_query_engine(sentence_index)
-
-# pprint(query_engine.query("What is the importance of networking in AI?").response)
-
-# Auto Merging
-# automerging_index = build_automerging_index(documents, llm)
-# query_engine = get_automerging_query_engine(automerging_index)
-
-# pprint(query_engine.query("What is the importance of networking in AI?").response)
+for _ in range(3):
+    question = input("Ask me anything: ")
+    response = chat_engine.stream_chat(question, tool_choice="query_engine_tool")
