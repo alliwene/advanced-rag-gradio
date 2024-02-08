@@ -1,13 +1,13 @@
 from typing import List, Literal
 
-from scripts.query_engine_builder import build_index, get_query_engine
+from query_engine_builder import build_index, get_query_engine, llm
 
 from llama_index import Document
 
 
-def build_index_get_query_engine(
+def build_index_and_query_engine(
     documents: List[Document],
-    llm,
+    llm=llm,
     embed_model: str = "local:BAAI/bge-small-en-v1.5",
     window_size: int = 3,
     chunk_sizes: List[int] | None = None,

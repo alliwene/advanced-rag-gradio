@@ -52,7 +52,7 @@ def build_sentence_window_index(
 
 
 def get_sentence_window_query_engine(
-    sentence_index: VectorStoreIndex | BaseIndex,
+    index: VectorStoreIndex | BaseIndex,
     similarity_top_k=6,
     rerank_top_n=2,
 ) -> BaseQueryEngine:
@@ -62,7 +62,7 @@ def get_sentence_window_query_engine(
         top_n=rerank_top_n, model="BAAI/bge-reranker-base"
     )
 
-    sentence_window_engine = sentence_index.as_query_engine(
+    sentence_window_engine = index.as_query_engine(
         similarity_top_k=similarity_top_k,
         node_postprocessors=[postproc, rerank],
         streaming=True,

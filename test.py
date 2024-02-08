@@ -2,19 +2,20 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-import openai
 from llama_index import SimpleDirectoryReader
+from llama_index.query_engine import BaseQueryEngine, RetrieverQueryEngine
 
-from scripts import utils
-from backend import build_index
+from backend import build_index_and_query_engine
 
-
-openai.api_key = utils.get_openai_api_key()
 
 documents = SimpleDirectoryReader(
     input_files=["pdfs/eBook-How-to-Build-a-Career-in-AI.pdf"]
 ).load_data()
 
-index = build_index(documents, rag_type="veronica")
+query_engine: BaseQueryEngine | RetrieverQueryEngine = build_index_and_query_engine(
+    documents, rag_type="auto_merging"
+)
 
-print(index)
+response = query_engine.query("What is the best way to build a career in AI?")
+
+response.print_response_stream()
