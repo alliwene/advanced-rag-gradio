@@ -63,4 +63,5 @@ def get_automerging_query_engine(
     auto_merging_engine = RetrieverQueryEngine.from_args(
         retriever, node_postprocessors=[rerank], streaming=True
     )
+
     return auto_merging_engine
