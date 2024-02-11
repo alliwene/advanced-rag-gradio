@@ -1,5 +1,6 @@
 from pprint import pprint
 import warnings
+from typing import List
 
 warnings.filterwarnings("ignore")
 
@@ -11,13 +12,9 @@ from llama_index.chat_engine.types import ChatMode
 import openai
 
 from scripts import utils
-from scripts.basic_rag import build_basic_rag_index, get_basic_rag_query_engine
-from scripts.sentence_window import (
-    build_sentence_window_index,
-    get_sentence_window_query_engine,
-)
-from scripts.auto_merging import build_automerging_index, get_automerging_query_engine
-
+from llama_index.chat_engine.types import ChatMessage
+from llama_index.core.llms.types import MessageRole
+from llama_index.memory import ChatMemoryBuffer
 
 openai.api_key = utils.get_openai_api_key()
 
@@ -26,15 +23,33 @@ documents = SimpleDirectoryReader(
 ).load_data()
 
 
-llm = OpenAI(model="gpt-3.5-turbo", temperature=0.1)
-
+llm = OpenAI(model="gpt-3.5-turbo-0125", temperature=0.1)
 
 # Necessary to use the latest OpenAI models that support function calling API
 service_context = ServiceContext.from_defaults(llm=llm)
 index = VectorStoreIndex.from_documents(documents, service_context=service_context)
 
-chat_engine = index.as_chat_engine(chat_mode=ChatMode.OPENAI, verbose=True)
+memory = ChatMemoryBuffer.from_defaults(token_limit=1500)
+chat_engine = index.as_chat_engine(
+    chat_mode=ChatMode.CONDENSE_PLUS_CONTEXT,
+    memory=memory,
+    verbose=True,
+)
 
-for _ in range(3):
+# messages: List[ChatMessage] = []
+
+for _ in range(2):
+    print("\n")
     question = input("Ask me anything: ")
-    response = chat_engine.stream_chat(question, tool_choice="query_engine_tool")
+    # messages.append(ChatMessage(role=MessageRole.USER, content=question))
+    response = chat_engine.chat(
+        question,
+        # chat_history=messages,
+    )
+    # messages.append(ChatMessage(role=MessageRole.ASSISTANT, content=response.response))
+    # for token in response.response_gen:
+    #     print(token, end="")
+    pprint(response.response)
+
+# print("\n")
+# pprint(messages)
