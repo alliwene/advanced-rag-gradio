@@ -67,6 +67,6 @@ def get_automerging_query_engine(
         top_n=rerank_top_n, model="BAAI/bge-reranker-base"
     )
     auto_merging_engine = RetrieverQueryEngine.from_args(
-        retriever, node_postprocessors=[rerank]
+        retriever, node_postprocessors=[rerank], streaming=True
     )
     return auto_merging_engine

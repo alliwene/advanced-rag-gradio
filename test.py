@@ -32,6 +32,7 @@ index = VectorStoreIndex.from_documents(documents, service_context=service_conte
 memory = ChatMemoryBuffer.from_defaults(token_limit=1500)
 chat_engine = index.as_chat_engine(
     chat_mode=ChatMode.CONDENSE_PLUS_CONTEXT,
+    similarity_top_k=3,
     memory=memory,
     verbose=True,
 )
