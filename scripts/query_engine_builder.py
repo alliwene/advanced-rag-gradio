@@ -3,12 +3,15 @@ from os import PathLike
 from typing import List, Literal
 
 from scripts.utils import get_openai_api_key
-from scripts.basic_rag import build_basic_rag_index, get_basic_rag_query_engine
-from scripts.sentence_window import (
-    build_sentence_window_index,
-    get_sentence_window_query_engine,
-)
-from scripts.auto_merging import build_automerging_index, get_automerging_query_engine
+
+from scripts.basic_rag.build_index import build_basic_rag_index
+from scripts.basic_rag.query_engine import get_basic_rag_query_engine
+
+from scripts.sentence_window.build_index import build_sentence_window_index
+from scripts.sentence_window.query_engine import get_sentence_window_query_engine
+
+from scripts.auto_merging.build_index import build_automerging_index
+from scripts.auto_merging.query_engine import get_automerging_query_engine
 
 import nest_asyncio
 import openai
@@ -19,7 +22,6 @@ from llama_index.query_engine import RetrieverQueryEngine, BaseQueryEngine
 
 
 nest_asyncio.apply()
-
 warnings.filterwarnings("ignore")
 
 openai.api_key = get_openai_api_key()
@@ -36,7 +38,7 @@ def build_index(
     window_size: int = 3,
     chunk_sizes: List[int] | None = None,
     rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
-):
+) -> VectorStoreIndex | BaseIndex:
     index_params = {
         "documents": documents,
         "llm": llm,
