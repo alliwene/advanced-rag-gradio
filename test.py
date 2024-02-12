@@ -12,7 +12,6 @@ from llama_index.chat_engine.types import ChatMode
 import openai
 
 from scripts import utils
-from scripts.basic_rag import build_basic_rag_index, get_basic_rag_query_engine
 from llama_index.chat_engine.types import ChatMessage
 from llama_index.core.llms.types import MessageRole
 from llama_index.memory import ChatMemoryBuffer
@@ -23,12 +22,6 @@ documents = SimpleDirectoryReader(
     input_files=["pdfs/eBook-How-to-Build-a-Career-in-AI.pdf"]
 ).load_data()
 llm = OpenAI(model="gpt-3.5-turbo-0125", temperature=0.1)
-
-index = build_basic_rag_index(documents, llm)
-
-engine = get_basic_rag_query_engine(index, similarity_top_k=2)
-
-print(engine.query("What is AI?").print_response_stream())
 
 
 # Necessary to use the latest OpenAI models that support function calling API

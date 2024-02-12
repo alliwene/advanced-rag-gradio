@@ -3,7 +3,6 @@ from os import PathLike
 from typing import List, cast, Optional
 
 from llama_index import (
-    load_index_from_storage,
     Document,
     ServiceContext,
     VectorStoreIndex,
@@ -13,9 +12,10 @@ from llama_index.indices.postprocessor import SentenceTransformerRerank
 from llama_index.node_parser import HierarchicalNodeParser, get_leaf_nodes
 from llama_index.retrievers import AutoMergingRetriever
 from llama_index.query_engine import RetrieverQueryEngine
-from llama_index.indices.base import BaseIndex
 from llama_index.indices.vector_store.retrievers.retriever import VectorIndexRetriever
 from llama_index.llms import OpenAI
+
+from scripts.load_index import load_index
 
 
 def build_automerging_index(
@@ -24,7 +24,7 @@ def build_automerging_index(
     embed_model: str = "local:BAAI/bge-small-en-v1.5",
     save_dir: PathLike[str] = cast(PathLike[str], "merging_index"),
     chunk_sizes: Optional[List[int]] = None,
-) -> VectorStoreIndex | BaseIndex:
+) -> VectorStoreIndex:
     chunk_sizes = chunk_sizes or [2048, 512, 128]
     node_parser = HierarchicalNodeParser.from_defaults(chunk_sizes=chunk_sizes)
     nodes = node_parser.get_nodes_from_documents(documents)
@@ -42,18 +42,14 @@ def build_automerging_index(
         )
         automerging_index.storage_context.persist(persist_dir=save_dir)
     else:
-        automerging_index = cast(
-            VectorStoreIndex,
-            load_index_from_storage(
-                StorageContext.from_defaults(persist_dir=cast(str, save_dir)),
-                service_context=merging_context,
-            ),
+        automerging_index = load_index(
+            save_dir=save_dir, service_context=merging_context
         )
     return automerging_index
 
 
 def get_automerging_query_engine(
-    automerging_index: VectorStoreIndex | BaseIndex,
+    automerging_index: VectorStoreIndex,
     similarity_top_k: int = 12,
     rerank_top_n: int = 2,
 ) -> RetrieverQueryEngine:
