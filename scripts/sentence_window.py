@@ -1,4 +1,3 @@
-import os
 from typing import List
 
 from llama_index.node_parser import SentenceWindowNodeParser
@@ -7,14 +6,14 @@ from llama_index.indices.postprocessor import (
     SentenceTransformerRerank,
 )
 from llama_index import (
-    load_index_from_storage,
     Document,
     ServiceContext,
     VectorStoreIndex,
-    StorageContext,
 )
 from llama_index.query_engine import BaseQueryEngine
 from llama_index.indices.base import BaseIndex
+
+from scripts.load_index import load_index
 
 
 def build_sentence_window_index(
@@ -36,17 +35,8 @@ def build_sentence_window_index(
         node_parser=node_parser,
     )
     document = Document(text="\n\n".join([doc.text for doc in documents]))
-    
-    if not os.path.exists(save_dir):
-        sentence_index = VectorStoreIndex.from_documents(
-            [document], service_context=sentence_context
-        )
-        sentence_index.storage_context.persist(persist_dir=save_dir)
-    else:
-        sentence_index = load_index_from_storage(
-            StorageContext.from_defaults(persist_dir=save_dir),
-            service_context=sentence_context,
-        )
+
+    sentence_index = load_index(document, sentence_context, save_dir)
 
     return sentence_index
 

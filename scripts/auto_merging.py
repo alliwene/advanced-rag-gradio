@@ -2,7 +2,6 @@ import os
 from typing import List
 
 from llama_index import (
-    load_index_from_storage,
     Document,
     ServiceContext,
     VectorStoreIndex,
@@ -13,6 +12,8 @@ from llama_index.node_parser import HierarchicalNodeParser, get_leaf_nodes
 from llama_index.retrievers import AutoMergingRetriever
 from llama_index.query_engine import RetrieverQueryEngine
 from llama_index.indices.base import BaseIndex
+
+from scripts.load_index import index_from_storage
 
 
 def build_automerging_index(
@@ -39,10 +40,7 @@ def build_automerging_index(
         )
         automerging_index.storage_context.persist(persist_dir=save_dir)
     else:
-        automerging_index = load_index_from_storage(
-            StorageContext.from_defaults(persist_dir=save_dir),
-            service_context=merging_context,
-        )
+        automerging_index = index_from_storage(merging_context, save_dir)
     return automerging_index
 
 

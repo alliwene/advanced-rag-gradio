@@ -8,3 +8,5 @@ __pycache__
 
 explain.ipynb
 *_chatbot/
+
+.mypy_cache/

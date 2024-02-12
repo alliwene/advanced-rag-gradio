@@ -1,6 +1,6 @@
 from typing import List, Literal
 
-from query_engine_builder import build_index, get_query_engine, llm
+from scripts.query_engine_builder import build_index, get_query_engine, llm
 
 from llama_index import Document
 
