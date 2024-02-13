@@ -26,7 +26,7 @@ warnings.filterwarnings("ignore")
 
 openai.api_key = get_openai_api_key()
 
-model_name = "gpt-3.5-turbo"
+model_name = "gpt-3.5-turbo-0125"
 llm = OpenAI(model=model_name, temperature=0.1)
 
 
