@@ -10,15 +10,15 @@ h1 {
 
 with gr.Blocks(css=css) as demo:
     gr.Markdown("# ADVANCED RAG GPT")
-    
-    # basic, sentence window, auto merging 
-    # trulens eval - context relevance, groundedness, answer relevance 
+
+    # basic, sentence window, auto merging
+    # trulens eval - context relevance, groundedness, answer relevance
 
     chatbot = gr.Chatbot(show_copy_button=True)
 
     with gr.Column():
         text = gr.Textbox()
-        
+
         file = gr.File(
             type="filepath",
             label="Upload a file",

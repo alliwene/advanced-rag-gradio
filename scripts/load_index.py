@@ -1,14 +1,14 @@
 import os
 from os import PathLike
 
-from llama_index import (
+from llama_index.core import (
     Document,
     VectorStoreIndex,
     ServiceContext,
     StorageContext,
     load_index_from_storage,
 )
-from llama_index.indices.base import BaseIndex
+from llama_index.core.indices.base import BaseIndex
 
 
 def load_index(

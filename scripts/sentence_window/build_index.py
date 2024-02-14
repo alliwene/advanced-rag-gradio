@@ -1,12 +1,8 @@
 from typing import List
 
-from llama_index.node_parser import SentenceWindowNodeParser
-from llama_index import (
-    Document,
-    ServiceContext,
-    VectorStoreIndex,
-)
-from llama_index.indices.base import BaseIndex
+from llama_index.core.node_parser import SentenceWindowNodeParser
+from llama_index.core import Document, ServiceContext, VectorStoreIndex
+from llama_index.core.indices.base import BaseIndex
 
 from scripts.load_index import load_index
 
