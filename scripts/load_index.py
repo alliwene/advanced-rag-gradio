@@ -4,7 +4,6 @@ from os import PathLike
 from llama_index.core import (
     Document,
     VectorStoreIndex,
-    ServiceContext,
     StorageContext,
     load_index_from_storage,
 )
