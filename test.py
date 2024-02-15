@@ -4,17 +4,17 @@ from typing import List
 
 warnings.filterwarnings("ignore")
 
-from llama_index import SimpleDirectoryReader
-from llama_index.llms import OpenAI
-from llama_index import VectorStoreIndex, SimpleDirectoryReader, ServiceContext
-from llama_index.chat_engine.types import ChatMode
+from llama_index.core import SimpleDirectoryReader
+from llama_index.llms.openai import OpenAI
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, ServiceContext
+from llama_index.core.chat_engine.types import ChatMode
 
 import openai
 
 from scripts import utils
-from llama_index.chat_engine.types import ChatMessage
-from llama_index.core.llms.types import MessageRole
-from llama_index.memory import ChatMemoryBuffer
+from llama_index.core.llms import ChatMessage
+from llama_index.core.llms import MessageRole
+from llama_index.core.memory import ChatMemoryBuffer
 
 openai.api_key = utils.get_openai_api_key()
 

@@ -1,11 +1,7 @@
 from typing import List
 
-from llama_index import (
-    Document,
-    VectorStoreIndex,
-    ServiceContext,
-)
-from llama_index.indices.base import BaseIndex
+from llama_index.core import Document, VectorStoreIndex, ServiceContext
+from llama_index.core.indices.base import BaseIndex
 
 from scripts.load_index import load_index
 

@@ -3,11 +3,11 @@ from os import PathLike
 
 from scripts import utils
 import openai
-from llama_index.llms import OpenAI
+from llama_index.llms.openai import OpenAI
 
-from llama_index import Document, VectorStoreIndex
-from llama_index.indices.base import BaseIndex
-from llama_index.query_engine import RetrieverQueryEngine, BaseQueryEngine
+from llama_index.core import Document, VectorStoreIndex
+from llama_index.core.indices.base import BaseIndex
+from llama_index.core.query_engine import RetrieverQueryEngine, BaseQueryEngine
 
 from typing import List, Literal
 
