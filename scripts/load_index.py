@@ -1,30 +1,32 @@
 import os
 from os import PathLike
+from typing import cast
 
-from llama_index.core import Document, VectorStoreIndex, ServiceContext, StorageContext, load_index_from_storage
+from llama_index.core import (
+    Document,
+    VectorStoreIndex,
+    StorageContext,
+    load_index_from_storage,
+)
 from llama_index.core.indices.base import BaseIndex
+from llama_index.embeddings.openai import OpenAIEmbedding
 
 
 def load_index(
-    document: Document, service_context: ServiceContext, save_dir: PathLike[str]
+    document: Document, embed_model: OpenAIEmbedding, save_dir: PathLike[str]
 ) -> VectorStoreIndex | BaseIndex:
     if not os.path.exists(save_dir):
-        index = VectorStoreIndex.from_documents(
-            [document], service_context=service_context
-        )
+        index = VectorStoreIndex.from_documents([document], embed_model=embed_model)
         index.storage_context.persist(persist_dir=save_dir)
     else:
-        index = index_from_storage(service_context, save_dir)
+        index = cast(VectorStoreIndex, index_from_storage(save_dir))
 
     return index
 
 
-def index_from_storage(
-    service_context: ServiceContext, save_dir: PathLike[str]
-) -> BaseIndex:
+def index_from_storage(save_dir: PathLike[str]) -> BaseIndex:
     index = load_index_from_storage(
-        StorageContext.from_defaults(persist_dir=save_dir),
-        service_context=service_context,
+        StorageContext.from_defaults(persist_dir=cast(str, save_dir)),
     )
 
     return index

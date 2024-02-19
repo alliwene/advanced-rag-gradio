@@ -57,9 +57,10 @@ from scripts.auto_merging import build_automerging_index, get_automerging_query_
 #             embed_model=embed_model,
 #             chunk_sizes=chunk_sizes
 #         )
-    
-    # use a dictionary to fix the code with no if else 
-    
+
+# use a dictionary to fix the code with no if else
+
+
 def build_index(
     documents: List[Document],
     llm,
@@ -72,9 +73,9 @@ def build_index(
     index_builders = {
         "basic": build_basic_rag_index,
         "sentence_window": build_sentence_window_index,
-        "auto_merging": build_automerging_index
+        "auto_merging": build_automerging_index,
     }
-    
+
     if rag_type in index_builders:
         return index_builders[rag_type](
             documents=documents,
@@ -82,9 +83,8 @@ def build_index(
             save_dir=save_dir,
             embed_model=embed_model,
             window_size=window_size,
-            chunk_sizes=chunk_sizes
+            chunk_sizes=chunk_sizes,
         )
-    
 
     # Define a function for get query engine
     # def get_query_engine (
@@ -97,17 +97,20 @@ def build_index(
     #     elif rag_type == "auto_merging":
     #         return get_automerging_query_engine(index, similarity_top_k=similarity_top_k, rerank_top_n=rerank_top_n)
 
+
 def get_query_engine(
-        index: VectorStoreIndex | BaseIndex,
-        similarity_top_k: int,
-        rerank_top_n: int,
-        rag_type: Literal["basic", "sentence_window", "auto_merging"]
-    ) -> BaseQueryEngine | RetrieverQueryEngine:
-        query_engines = {
-            "basic": get_basic_rag_query_engine,
-            "sentence_window": get_sentence_window_query_engine,
-            "auto_merging": get_automerging_query_engine
-        }
-        
-        if rag_type in query_engines:
-            return query_engines[rag_type](index, similarity_top_k=similarity_top_k, rerank_top_n=rerank_top_n)
+    index: VectorStoreIndex | BaseIndex,
+    similarity_top_k: int,
+    rerank_top_n: int,
+    rag_type: Literal["basic", "sentence_window", "auto_merging"],
+) -> BaseQueryEngine | RetrieverQueryEngine:
+    query_engines = {
+        "basic": get_basic_rag_query_engine,
+        "sentence_window": get_sentence_window_query_engine,
+        "auto_merging": get_automerging_query_engine,
+    }
+
+    if rag_type in query_engines:
+        return query_engines[rag_type](
+            index, similarity_top_k=similarity_top_k, rerank_top_n=rerank_top_n
+        )

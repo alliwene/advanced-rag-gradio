@@ -15,7 +15,7 @@ with gr.Blocks(css=css) as demo:
 
     with gr.Column():
         text = gr.Textbox()
-        
+
         file = gr.File(
             type="filepath",
             label="Upload a file",

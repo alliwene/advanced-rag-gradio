@@ -7,6 +7,7 @@ from llama_index.core.indices.base import BaseIndex
 
 from scripts.load_index import index_from_storage
 
+
 def build_automerging_index(
     documents: List[Document],
     llm,
