@@ -1,8 +1,7 @@
 import warnings
 from os import PathLike
-from typing import List, Literal
+from typing import List, Literal, TypedDict
 
-from scripts.utils import get_openai_api_key
 
 from scripts.basic_rag.build_index import build_basic_rag_index
 from scripts.basic_rag.query_engine import get_basic_rag_query_engine
@@ -19,29 +18,33 @@ from llama_index.llms.openai import OpenAI
 from llama_index.core import Document, VectorStoreIndex
 from llama_index.core.indices.base import BaseIndex
 from llama_index.core.query_engine import RetrieverQueryEngine, BaseQueryEngine
+from llama_index.core.embeddings.utils import EmbedType
 
 
 nest_asyncio.apply()
 warnings.filterwarnings("ignore")
 
-openai.api_key = get_openai_api_key()
 
-model_name = "gpt-3.5-turbo"
-llm = OpenAI(model=model_name, temperature=0.1)
+class IndexParams(TypedDict):
+    documents: List[Document]
+    embed_model: EmbedType
+
+
+class QueryParams(TypedDict):
+    index: VectorStoreIndex | BaseIndex
+    similarity_top_k: int
 
 
 def build_index(
     documents: List[Document],
     # save_dir: PathLike,
-    llm=llm,
-    embed_model: str = "local:BAAI/bge-small-en-v1.5",
+    embed_model: EmbedType,
     window_size: int = 3,
     chunk_sizes: List[int] | None = None,
     rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
 ) -> VectorStoreIndex | BaseIndex:
-    index_params = {
+    index_params: IndexParams = {
         "documents": documents,
-        "llm": llm,
         "embed_model": embed_model,
         # "save_dir": save_dir,
     }
@@ -70,10 +73,11 @@ def get_query_engine(
     rerank_top_n: int = 2,
     rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
 ) -> BaseQueryEngine | RetrieverQueryEngine:
-    query_params = {
+    query_params: QueryParams = {
         "index": index,
         "similarity_top_k": similarity_top_k,
     }
+
     query_engines = {
         "basic": get_basic_rag_query_engine(**query_params),
         "sentence_window": get_sentence_window_query_engine(

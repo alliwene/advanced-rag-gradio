@@ -1,16 +1,17 @@
 import os
-from typing import List
+from typing import List, cast
 
 from llama_index.core.node_parser import SentenceWindowNodeParser
 from llama_index.core import Document, VectorStoreIndex
 from llama_index.core.indices.base import BaseIndex
+from llama_index.core.embeddings.utils import EmbedType
 
 from scripts.load_index import index_from_storage
 
 
 def build_sentence_window_index(
     documents: List[Document],
-    embed_model,
+    embed_model: EmbedType,
     save_dir="sentence_index",
     window_size=3,
 ) -> VectorStoreIndex | BaseIndex:
@@ -29,6 +30,6 @@ def build_sentence_window_index(
         )
         sentence_index.storage_context.persist(persist_dir=save_dir)
     else:
-        sentence_index = index_from_storage(save_dir)
+        sentence_index = cast(VectorStoreIndex, index_from_storage(save_dir))
 
     return sentence_index
