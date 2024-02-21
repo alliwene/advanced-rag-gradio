@@ -16,6 +16,7 @@ from llama_index.core import Document
 from llama_index.core.indices.base import BaseIndex
 from llama_index.core.query_engine import RetrieverQueryEngine, BaseQueryEngine
 from llama_index.core.embeddings.utils import EmbedType
+from llama_index.core.llms.utils import LLMType
 
 
 import nest_asyncio
@@ -33,12 +34,14 @@ class IndexParams(TypedDict):
 class QueryParams(TypedDict):
     index: BaseIndex
     similarity_top_k: int
+    llm: LLMType
 
 
 class ChatEngineBuilder:
     def __init__(
         self,
         documents: List[Document],
+        llm: LLMType,
         embed_model: EmbedType,
         save_dir: PathLike[str],
         rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
@@ -47,6 +50,7 @@ class ChatEngineBuilder:
         self.documents = documents
         self.rag_type = rag_type
         self.save_dir = save_dir
+        self.llm = llm
 
     def build_index(
         self,
@@ -85,6 +89,7 @@ class ChatEngineBuilder:
         query_params: QueryParams = {
             "index": self.build_index(),
             "similarity_top_k": similarity_top_k,
+            "llm": self.llm,
         }
 
         query_engines = {
