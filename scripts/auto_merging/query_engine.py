@@ -22,7 +22,7 @@ def get_automerging_query_engine(
         cast(VectorIndexRetriever, base_retriever), index.storage_context, verbose=True
     )
     rerank = SentenceTransformerRerank(
-        top_n=rerank_top_n, model="BAAI/bge-reranker-base"
+        top_n=rerank_top_n, model="cross-encoder/ms-marco-TinyBERT-L-2-v2"
     )
     auto_merging_engine = RetrieverQueryEngine.from_args(
         retriever, node_postprocessors=[rerank], streaming=True
