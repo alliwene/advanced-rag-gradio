@@ -35,6 +35,7 @@ chat_engine = index.as_chat_engine(
     similarity_top_k=3,
     memory=memory,
     verbose=True,
+    streaming=True
 )
 
 # messages: List[ChatMessage] = []
@@ -43,7 +44,7 @@ for _ in range(2):
     print("\n")
     question = input("Ask me anything: ")
     # messages.append(ChatMessage(role=MessageRole.USER, content=question))
-    response = chat_engine.chat(
+    response = chat_engine.stream_chat(
         question,
         # chat_history=messages,
     )
