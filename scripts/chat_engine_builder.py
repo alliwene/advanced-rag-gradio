@@ -4,13 +4,13 @@ from typing import List, Literal, TypedDict
 
 
 from scripts.basic_rag.build_index import build_basic_rag_index
-from scripts.basic_rag.query_engine import get_basic_rag_query_engine
+from scripts.basic_rag.chat_engine import build_basic_rag_chat_engine
 
 from scripts.sentence_window.build_index import build_sentence_window_index
-from scripts.sentence_window.query_engine import get_sentence_window_query_engine
+from scripts.sentence_window.chat_engine import build_sentence_window_chat_engine
 
 from scripts.auto_merging.build_index import build_automerging_index
-from scripts.auto_merging.query_engine import get_automerging_query_engine
+from scripts.auto_merging.chat_engine import build_automerging_chat_engine
 
 from llama_index.core import Document
 from llama_index.core.indices.base import BaseIndex
@@ -35,7 +35,7 @@ class QueryParams(TypedDict):
     similarity_top_k: int
 
 
-class QueryEngineBuilder:
+class ChatEngineBuilder:
     def __init__(
         self,
         documents: List[Document],
@@ -76,7 +76,7 @@ class QueryEngineBuilder:
         except KeyError:
             raise ValueError(f"Invalid rag_type: {self.rag_type}")
 
-    def get_query_engine(
+    def build_chat_engine(
         self,
         similarity_top_k: int = 6,
         rerank_top_n: int = 2,
@@ -88,11 +88,11 @@ class QueryEngineBuilder:
         }
 
         query_engines = {
-            "basic": get_basic_rag_query_engine(**query_params),
-            "sentence_window": get_sentence_window_query_engine(
+            "basic": build_basic_rag_chat_engine(**query_params),
+            "sentence_window": build_sentence_window_chat_engine(
                 **query_params, rerank_top_n=rerank_top_n
             ),
-            "auto_merging": get_automerging_query_engine(
+            "auto_merging": build_automerging_chat_engine(
                 **query_params, rerank_top_n=rerank_top_n
             ),
         }

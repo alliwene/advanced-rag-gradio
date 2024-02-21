@@ -6,7 +6,7 @@ from llama_index.core.chat_engine.types import ChatMode
 from llama_index.core.memory import ChatMemoryBuffer
 
 from backend import build_index_and_query_engine
-from scripts.query_engine_builder import build_index
+from scripts.chat_engine_builder import build_index
 
 warnings.filterwarnings("ignore")
 

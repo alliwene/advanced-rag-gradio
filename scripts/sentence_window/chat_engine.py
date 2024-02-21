@@ -2,12 +2,11 @@ from llama_index.core.postprocessor import (
     MetadataReplacementPostProcessor,
     SentenceTransformerRerank,
 )
-from llama_index.core import VectorStoreIndex
 from llama_index.core.query_engine import BaseQueryEngine
 from llama_index.core.indices.base import BaseIndex
 
 
-def get_sentence_window_query_engine(
+def build_sentence_window_chat_engine(
     index: BaseIndex,
     similarity_top_k=6,
     rerank_top_n=2,

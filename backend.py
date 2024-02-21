@@ -1,6 +1,6 @@
 from typing import List, Literal
 
-from scripts.query_engine_builder import build_index, get_query_engine, llm
+from scripts.chat_engine_builder import build_index, build_chat_engine, llm
 
 from llama_index.core import Document
 
@@ -25,7 +25,7 @@ def build_index_and_query_engine(
         rag_type=rag_type,
     )
 
-    query_engine = get_query_engine(
+    query_engine = build_chat_engine(
         index=index,
         similarity_top_k=similarity_top_k,
         rerank_top_n=rerank_top_n,

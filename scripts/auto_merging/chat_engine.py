@@ -9,7 +9,7 @@ from llama_index.core.indices.vector_store.retrievers.retriever import (
 )
 
 
-def get_automerging_query_engine(
+def build_automerging_chat_engine(
     index: BaseIndex,
     similarity_top_k=12,
     rerank_top_n=2,
