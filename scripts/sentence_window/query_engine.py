@@ -15,7 +15,7 @@ def get_sentence_window_query_engine(
     # define postprocessors
     postproc = MetadataReplacementPostProcessor(target_metadata_key="window")
     rerank = SentenceTransformerRerank(
-        top_n=rerank_top_n, model="BAAI/bge-reranker-base"
+        top_n=rerank_top_n, model="cross-encoder/ms-marco-TinyBERT-L-2-v2"
     )
 
     sentence_window_engine = index.as_query_engine(

@@ -8,10 +8,11 @@ from llama_index.core import (
     load_index_from_storage,
 )
 from llama_index.core.indices.base import BaseIndex
+from llama_index.core.embeddings.utils import EmbedType
 
 
 def load_index(
-    document: Document, embed_model, save_dir: PathLike[str]
+    document: Document, embed_model: EmbedType, save_dir: PathLike[str]
 ) -> VectorStoreIndex | BaseIndex:
     if not os.path.exists(save_dir):
         index = VectorStoreIndex.from_documents([document], embed_model=embed_model)
