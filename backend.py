@@ -4,6 +4,7 @@ from scripts.query_engine_builder import build_index, get_query_engine, llm
 
 from llama_index.core import Document
 
+
 #! Redundant code
 def build_index_and_query_engine(
     documents: List[Document],

@@ -12,7 +12,7 @@ from scripts.sentence_window.query_engine import get_sentence_window_query_engin
 from scripts.auto_merging.build_index import build_automerging_index
 from scripts.auto_merging.query_engine import get_automerging_query_engine
 
-from llama_index.core import Document, VectorStoreIndex
+from llama_index.core import Document
 from llama_index.core.indices.base import BaseIndex
 from llama_index.core.query_engine import RetrieverQueryEngine, BaseQueryEngine
 from llama_index.core.embeddings.utils import EmbedType
@@ -22,6 +22,17 @@ import nest_asyncio
 
 nest_asyncio.apply()
 warnings.filterwarnings("ignore")
+
+
+class IndexParams(TypedDict):
+    documents: List[Document]
+    embed_model: EmbedType
+    save_dir: PathLike[str]
+
+
+class QueryParams(TypedDict):
+    index: BaseIndex
+    similarity_top_k: int
 
 
 class QueryEngineBuilder:
@@ -41,8 +52,8 @@ class QueryEngineBuilder:
         self,
         window_size: int = 3,
         chunk_sizes: List[int] | None = None,
-    ) -> VectorStoreIndex | BaseIndex:
-        index_params = {
+    ) -> BaseIndex:
+        index_params: IndexParams = {
             "documents": self.documents,
             "embed_model": self.embed_model,
             "save_dir": self.save_dir,
@@ -71,7 +82,7 @@ class QueryEngineBuilder:
         rerank_top_n: int = 2,
     ) -> BaseQueryEngine | RetrieverQueryEngine:
 
-        query_params = {
+        query_params: QueryParams = {
             "index": self.build_index(),
             "similarity_top_k": similarity_top_k,
         }

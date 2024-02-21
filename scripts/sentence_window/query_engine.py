@@ -8,7 +8,7 @@ from llama_index.core.indices.base import BaseIndex
 
 
 def get_sentence_window_query_engine(
-    index: VectorStoreIndex | BaseIndex,
+    index: BaseIndex,
     similarity_top_k=6,
     rerank_top_n=2,
 ) -> BaseQueryEngine:
