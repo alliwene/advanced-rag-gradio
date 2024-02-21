@@ -60,19 +60,19 @@ class QueryEngineBuilder:
         chunk_sizes: List[int] | None = None,
     ) -> VectorStoreIndex | BaseIndex:
         index_builders = {
-            "basic": build_basic_rag_index(**self.index_params),
-            "sentence_window": build_sentence_window_index(
+            "basic": lambda: build_basic_rag_index(**self.index_params),
+            "sentence_window": lambda: build_sentence_window_index(
                 **self.index_params,
                 window_size=window_size,
             ),
-            "auto_merging": build_automerging_index(
+            "auto_merging": lambda: build_automerging_index(
                 **self.index_params,
                 chunk_sizes=chunk_sizes,
             ),
         }
 
         try:
-            return index_builders[self.rag_type]
+            return index_builders[self.rag_type]()
         except KeyError:
             raise ValueError(f"Invalid rag_type: {self.rag_type}")
 
@@ -88,16 +88,16 @@ class QueryEngineBuilder:
         }
 
         query_engines = {
-            "basic": get_basic_rag_query_engine(**query_params),
-            "sentence_window": get_sentence_window_query_engine(
+            "basic": lambda: get_basic_rag_query_engine(**query_params),
+            "sentence_window": lambda: get_sentence_window_query_engine(
                 **query_params, rerank_top_n=rerank_top_n
             ),
-            "auto_merging": get_automerging_query_engine(
+            "auto_merging": lambda: get_automerging_query_engine(
                 **query_params, rerank_top_n=rerank_top_n
             ),
         }
 
         try:
-            return query_engines[self.rag_type]
+            return query_engines[self.rag_type]()
         except KeyError:
             raise ValueError(f"Invalid rag_type: {self.rag_type}")
