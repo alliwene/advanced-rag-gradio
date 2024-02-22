@@ -1,42 +1,45 @@
+import os
+from os import PathLike
 from typing import List, Literal
+from tempfile import _TemporaryFileWrapper
+
+from scripts.utils import get_openai_api_key, hash_file
+from scripts.chat_engine_builder import ChatEngineBuilder
 
 import openai
-from llama_index.core import Document
 from llama_index.llms.openai import OpenAI
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.core import SimpleDirectoryReader
+from llama_index.core.node_parser import SentenceSplitter
+from llama_index.core.chat_engine.types import BaseChatEngine
 
-from scripts.chat_engine_builder import build_index, get_query_engine
-from scripts.utils import get_openai_api_key
-from llama_index.core.embeddings.utils import EmbedType
 
 openai.api_key = get_openai_api_key()
 
 model_name = "gpt-3.5-turbo-0125"
 llm = OpenAI(model=model_name, temperature=0.1)
+embed_model = OpenAIEmbedding()
+
+api_keys: List[str] = ["OPENAI_API_KEY"]
+
+assert any(
+    os.getenv(api_key, None) for api_key in api_keys
+), "Add 'OPENAI_API_KEY' or 'COHERE_API_KEY' in your environment variables"
 
 
-#! Redundant code
-def build_index_and_query_engine(
-    documents: List[Document],
-    embed_model: EmbedType,
-    window_size: int = 3,
-    chunk_sizes: List[int] | None = None,
+def execute(
+    file: _TemporaryFileWrapper,
     rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
-    similarity_top_k: int = 6,
-    rerank_top_n: int = 2,
-):
-    index = build_index(
-        documents=documents,
-        embed_model=embed_model,
-        window_size=window_size,
-        chunk_sizes=chunk_sizes,
-        rag_type=rag_type,
-    )
+) -> BaseChatEngine:
+    file_path: PathLike[str] = file.name
+    save_dir: PathLike[str] = hash_file(file)
 
-    query_engine = get_query_engine(
-        index=index,
-        similarity_top_k=similarity_top_k,
-        rerank_top_n=rerank_top_n,
-        rag_type=rag_type,
-    )
+    documents = SimpleDirectoryReader(input_files=[file_path]).load_data()
 
-    return query_engine
+    parser = SentenceSplitter(chunk_size=512, chunk_overlap=100)
+    nodes = parser.get_nodes_from_documents(documents)
+
+    engine_builder = ChatEngineBuilder(nodes, llm, embed_model, save_dir, rag_type)
+    chat_engine = engine_builder.build_chat_engine()
+
+    return chat_engine
