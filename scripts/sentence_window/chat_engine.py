@@ -28,7 +28,6 @@ def build_sentence_window_chat_engine(
         memory=memory,
         verbose=True,
         node_postprocessors=[postproc, rerank],
-        streaming=True,
     )
 
     return sentence_window_engine

@@ -15,7 +15,7 @@ from scripts.auto_merging.chat_engine import build_automerging_chat_engine
 
 from llama_index.core import Document
 from llama_index.core.indices.base import BaseIndex
-from llama_index.core.query_engine import RetrieverQueryEngine, BaseQueryEngine
+from llama_index.core.chat_engine.types import BaseChatEngine
 from llama_index.core.embeddings.utils import EmbedType
 from llama_index.core.llms.utils import LLMType
 
@@ -53,19 +53,19 @@ class ChatEngineBuilder:
         }
 
         index_builders = {
-            "basic": build_basic_rag_index(**index_params),
-            "sentence_window": build_sentence_window_index(
+            "basic": lambda: build_basic_rag_index(**index_params),
+            "sentence_window": lambda: build_sentence_window_index(
                 **index_params,
                 window_size=window_size,
             ),
-            "auto_merging": build_automerging_index(
+            "auto_merging": lambda: build_automerging_index(
                 **index_params,
                 chunk_sizes=chunk_sizes,
             ),
         }
 
         try:
-            return index_builders[self.rag_type]
+            return index_builders[self.rag_type]()
         except KeyError:
             raise ValueError(f"Invalid rag_type: {self.rag_type}")
 
@@ -73,7 +73,7 @@ class ChatEngineBuilder:
         self,
         similarity_top_k: int = 6,
         rerank_top_n: int = 2,
-    ) -> BaseQueryEngine | RetrieverQueryEngine:
+    ) -> BaseChatEngine:
 
         query_params: QueryParams = {
             "index": self.build_index(),
@@ -82,16 +82,16 @@ class ChatEngineBuilder:
         }
 
         query_engines = {
-            "basic": build_basic_rag_chat_engine(**query_params),
-            "sentence_window": build_sentence_window_chat_engine(
+            "basic": lambda: build_basic_rag_chat_engine(**query_params),
+            "sentence_window": lambda: build_sentence_window_chat_engine(
                 **query_params, rerank_top_n=rerank_top_n
             ),
-            "auto_merging": build_automerging_chat_engine(
+            "auto_merging": lambda: build_automerging_chat_engine(
                 **query_params, rerank_top_n=rerank_top_n
             ),
         }
 
         try:
-            return query_engines[self.rag_type]
+            return query_engines[self.rag_type]()
         except KeyError:
             raise ValueError(f"Invalid rag_type: {self.rag_type}")

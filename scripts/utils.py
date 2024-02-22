@@ -7,6 +7,7 @@ from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core import Document
 from llama_index.core.indices.base import BaseIndex
 from llama_index.core.embeddings.utils import EmbedType
+from llama_index.core.llms.utils import LLMType
 
 memory = ChatMemoryBuffer.from_defaults(token_limit=3900)
 
