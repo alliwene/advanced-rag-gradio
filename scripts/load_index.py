@@ -14,7 +14,7 @@ from llama_index.core.embeddings.utils import EmbedType
 
 def load_index(
     document: Document, embed_model: EmbedType, save_dir: PathLike[str]
-) -> VectorStoreIndex | BaseIndex:
+) -> BaseIndex:
     if not os.path.exists(save_dir):
         index = VectorStoreIndex.from_documents([document], embed_model=embed_model)
         index.storage_context.persist(persist_dir=save_dir)

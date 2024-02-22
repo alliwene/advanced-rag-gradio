@@ -4,7 +4,7 @@ import openai
 from llama_index.core import Document
 from llama_index.llms.openai import OpenAI
 
-from scripts.query_engine_builder import build_index, get_query_engine
+from scripts.chat_engine_builder import build_index, get_query_engine
 from scripts.utils import get_openai_api_key
 from llama_index.core.embeddings.utils import EmbedType
 
@@ -12,6 +12,7 @@ openai.api_key = get_openai_api_key()
 
 model_name = "gpt-3.5-turbo-0125"
 llm = OpenAI(model=model_name, temperature=0.1)
+
 
 #! Redundant code
 def build_index_and_query_engine(

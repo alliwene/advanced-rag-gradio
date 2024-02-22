@@ -1,7 +1,6 @@
 from typing import cast
 from scripts.utils import memory
 
-from llama_index.core import VectorStoreIndex
 from llama_index.core.postprocessor import SentenceTransformerRerank
 from llama_index.core.retrievers import AutoMergingRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
@@ -11,10 +10,13 @@ from llama_index.core.indices.vector_store.retrievers.retriever import (
 )
 from llama_index.core.chat_engine import CondensePlusContextChatEngine
 from llama_index.core.chat_engine.types import BaseChatEngine
+from llama_index.core.llms.utils import LLMType
+from llama_index.core.llms.llm import LLM
 
 
-def get_automerging_query_engine(
-    index: VectorStoreIndex | BaseIndex,
+def build_automerging_chat_engine(
+    llm: LLMType,
+    index: BaseIndex,
     similarity_top_k=12,
     rerank_top_n=2,
 ) -> BaseChatEngine:
@@ -32,6 +34,7 @@ def get_automerging_query_engine(
     )
 
     chat_engine = CondensePlusContextChatEngine.from_defaults(
+        llm=cast(LLM, llm),
         retriever=retriever,
         memory=memory,
         query_engine=auto_merging_engine,

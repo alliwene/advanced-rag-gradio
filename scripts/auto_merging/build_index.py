@@ -14,12 +14,12 @@ def build_automerging_index(
     embed_model: EmbedType,
     save_dir="merging_index",
     chunk_sizes=None,
-) -> VectorStoreIndex | BaseIndex:
+) -> BaseIndex:
     chunk_sizes = chunk_sizes or [2048, 512, 128]
     node_parser = HierarchicalNodeParser.from_defaults(chunk_sizes=chunk_sizes)
     nodes = node_parser.get_nodes_from_documents(documents)
     leaf_nodes = get_leaf_nodes(nodes)
-    
+
     storage_context = StorageContext.from_defaults()
     storage_context.docstore.add_documents(nodes)
 

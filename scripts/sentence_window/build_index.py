@@ -14,7 +14,7 @@ def build_sentence_window_index(
     embed_model: EmbedType,
     save_dir="sentence_index",
     window_size=3,
-) -> VectorStoreIndex | BaseIndex:
+) -> BaseIndex:
     # create the sentence window node parser w/ default settings
     node_parser = SentenceWindowNodeParser.from_defaults(
         window_size=window_size,

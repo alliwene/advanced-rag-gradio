@@ -35,7 +35,7 @@ chat_engine = index.as_chat_engine(
     similarity_top_k=3,
     memory=memory,
     verbose=True,
-    streaming=True
+    streaming=True,
 )
 
 # messages: List[ChatMessage] = []

@@ -11,7 +11,7 @@ def build_basic_rag_index(
     documents: List[Document],
     embed_model: EmbedType,
     save_dir="basic_rag_index",
-) -> VectorStoreIndex | BaseIndex:
+) -> BaseIndex:
     document = Document(text="\n\n".join([doc.text for doc in documents]))
 
     index = load_index(document, embed_model, save_dir)

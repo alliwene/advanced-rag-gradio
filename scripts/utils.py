@@ -3,7 +3,7 @@ from dotenv import load_dotenv, find_dotenv
 
 from llama_index.core.memory import ChatMemoryBuffer
 
-memory = ChatMemoryBuffer.from_defaults(token_limit=1500)
+memory = ChatMemoryBuffer.from_defaults(token_limit=3900)
 
 
 def get_openai_api_key():
