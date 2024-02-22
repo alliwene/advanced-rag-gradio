@@ -26,7 +26,7 @@ assert any(
     os.getenv(api_key, None) for api_key in api_keys
 ), "Add 'OPENAI_API_KEY' or 'COHERE_API_KEY' in your environment variables"
 
-
+#! save folders in a directory
 def execute(
     file: _TemporaryFileWrapper,
     rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
