@@ -1,7 +1,8 @@
 import warnings
 from os import PathLike
-from typing import List, Literal, TypedDict
+from typing import List, Literal
 
+from scripts.utils import IndexParams, QueryParams
 
 from scripts.basic_rag.build_index import build_basic_rag_index
 from scripts.basic_rag.chat_engine import build_basic_rag_chat_engine
@@ -25,16 +26,7 @@ nest_asyncio.apply()
 warnings.filterwarnings("ignore")
 
 
-class IndexParams(TypedDict):
-    documents: List[Document]
-    embed_model: EmbedType
-    save_dir: PathLike[str]
 
-
-class QueryParams(TypedDict):
-    index: BaseIndex
-    similarity_top_k: int
-    llm: LLMType
 
 
 class ChatEngineBuilder:
