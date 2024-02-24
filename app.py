@@ -2,10 +2,7 @@ from tempfile import _TemporaryFileWrapper
 from typing import List, Tuple, Generator, Literal
 
 import gradio as gr
-from ansi2html import Ansi2HTMLConverter
 
-from backend import execute
-from scripts.utils import Capturing
 
 css = """
 h1 {
@@ -22,21 +19,21 @@ def add_text(chat_history: List[Tuple[str, str]], query: str):
     return chat_history, gr.update(value="", interactive=False)
 
 
-def generate_response(
-    file: _TemporaryFileWrapper,
-    chat_history: List[Tuple[str, str]],
-    rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
-) -> Generator[str, List[Tuple[str, str]], str]:
-    chat_engine = execute(file, rag_type)
+# def generate_response(
+#     file: _TemporaryFileWrapper,
+#     chat_history: List[Tuple[str, str]],
+#     rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
+# ) -> Generator[str, List[Tuple[str, str]], str]:
+#     chat_engine = execute(file, rag_type)
 
-    with Capturing() as output:
-        response = chat_engine.stream_chat(chat_history[-1][0])
+#     with Capturing() as output:
+#         response = chat_engine.stream_chat(chat_history[-1][0])
 
-    ansi = "\n========\n".join(output)
-    html_output = Ansi2HTMLConverter().convert(ansi)
-    for token in response.response_gen:
-        chat_history[-1][1] += token
-        yield chat_history, str(html_output)
+#     ansi = "\n========\n".join(output)
+#     html_output = Ansi2HTMLConverter().convert(ansi)
+#     for token in response.response_gen:
+#         chat_history[-1][1] += token
+#         yield chat_history, str(html_output)
 
 
 #! Take care of multiple files

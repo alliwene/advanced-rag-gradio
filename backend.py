@@ -1,45 +1,58 @@
 import os
 from os import PathLike
-from typing import List, Literal
+from typing import List, Literal, Tuple, cast
 from tempfile import _TemporaryFileWrapper
 
-from scripts.utils import get_openai_api_key, hash_file
+from scripts.utils import get_openai_api_key, hash_file, Capturing
 from scripts.chat_engine_builder import ChatEngineBuilder
 
 import openai
+from ansi2html import Ansi2HTMLConverter
 from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
-from llama_index.core import SimpleDirectoryReader
+from llama_index.core import SimpleDirectoryReader, Document
 from llama_index.core.node_parser import SentenceSplitter
-from llama_index.core.chat_engine.types import BaseChatEngine
 
 
 openai.api_key = get_openai_api_key()
 
-model_name = "gpt-3.5-turbo-0125"
-llm = OpenAI(model=model_name, temperature=0.1)
+llm = OpenAI(model="gpt-3.5-turbo-0125", temperature=0.1)
 embed_model = OpenAIEmbedding()
 
 api_keys: List[str] = ["OPENAI_API_KEY"]
 
-assert any(
-    os.getenv(api_key, None) for api_key in api_keys
-), "Add 'OPENAI_API_KEY' or 'COHERE_API_KEY' in your environment variables"
+assert any(os.getenv(api_key, None) for api_key in api_keys), (
+    "Add " + " ".join(api_keys) + " in your environment variables"
+)
 
-#! save folders in a directory
-def execute(
-    file: _TemporaryFileWrapper,
-    rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
-) -> BaseChatEngine:
-    file_path: PathLike[str] = file.name
-    save_dir: PathLike[str] = hash_file(file)
 
-    documents = SimpleDirectoryReader(input_files=[file_path]).load_data()
+class ChatbotInterface(ChatEngineBuilder):
+    def __init__(self):
+        super().__init__(llm, embed_model)
 
-    parser = SentenceSplitter(chunk_size=512, chunk_overlap=100)
-    nodes = parser.get_nodes_from_documents(documents)
+    def generate_response(
+        self,
+        chat_history: List[Tuple[str, str]],
+        file: _TemporaryFileWrapper,
+        rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
+    ):
+        file_path: PathLike[str] = cast(PathLike[str], file.name)
+        save_dir: PathLike[str] = cast(PathLike[str], f"saved_index/{hash_file(file)}")
 
-    engine_builder = ChatEngineBuilder(nodes, llm, embed_model, save_dir, rag_type)
-    chat_engine = engine_builder.build_chat_engine()
+        documents = SimpleDirectoryReader(input_files=[file_path]).load_data()
 
-    return chat_engine
+        parser = SentenceSplitter(chunk_size=512, chunk_overlap=100)
+        nodes = parser.get_nodes_from_documents(documents)
+
+        chat_engine = self.build_chat_engine(
+            cast(List[Document], nodes), save_dir, rag_type
+        )
+
+        with Capturing() as output:
+            response = chat_engine.stream_chat(chat_history[-1][0])
+
+        ansi = "\n========\n".join(output)
+        html_output = Ansi2HTMLConverter().convert(ansi)
+        for token in response.response_gen:
+            chat_history[-1][1] += token  # type: ignore
+            yield chat_history, str(html_output)

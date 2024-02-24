@@ -29,54 +29,54 @@ warnings.filterwarnings("ignore")
 class ChatEngineBuilder:
     def __init__(
         self,
-        documents: List[Document],
         llm: LLMType,
         embed_model: EmbedType,
-        save_dir: PathLike[str],
-        rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
     ):
         self.embed_model = embed_model
-        self.documents = documents
-        self.rag_type = rag_type
-        self.save_dir = save_dir
         self.llm = llm
-
-        self._index_params: IndexParams = {
-            "documents": self.documents,
-            "embed_model": self.embed_model,
-            "save_dir": self.save_dir,
-        }
 
     def build_index(
         self,
+        documents: List[Document],
+        save_dir: PathLike[str],
+        rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
         window_size: int = 3,
         chunk_sizes: List[int] | None = None,
     ) -> BaseIndex:
+        index_params: IndexParams = {
+            "documents": documents,
+            "embed_model": self.embed_model,
+            "save_dir": save_dir,
+        }
+
         index_builders = {
-            "basic": lambda: build_basic_rag_index(**self._index_params),
+            "basic": lambda: build_basic_rag_index(**index_params),
             "sentence_window": lambda: build_sentence_window_index(
-                **self._index_params,
+                **index_params,
                 window_size=window_size,
             ),
             "auto_merging": lambda: build_automerging_index(
-                **self._index_params,
+                **index_params,
                 chunk_sizes=chunk_sizes,
             ),
         }
 
         try:
-            return index_builders[self.rag_type]()
+            return index_builders[rag_type]()
         except KeyError:
-            raise ValueError(f"Invalid rag_type: {self.rag_type}")
+            raise ValueError(f"Invalid rag_type: {rag_type}")
 
     def build_chat_engine(
         self,
+        documents: List[Document],
+        save_dir: PathLike[str],
+        rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
         similarity_top_k: int = 6,
         rerank_top_n: int = 2,
     ) -> BaseChatEngine:
 
         query_params: QueryParams = {
-            "index": self.build_index(),
+            "index": self.build_index(documents, save_dir, rag_type),
             "similarity_top_k": similarity_top_k,
             "llm": self.llm,
         }
@@ -92,6 +92,6 @@ class ChatEngineBuilder:
         }
 
         try:
-            return query_engines[self.rag_type]()
+            return query_engines[rag_type]()
         except KeyError:
-            raise ValueError(f"Invalid rag_type: {self.rag_type}")
+            raise ValueError(f"Invalid rag_type: {rag_type}")
