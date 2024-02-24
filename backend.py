@@ -32,10 +32,13 @@ class ChatbotInterface(ChatEngineBuilder):
 
     def generate_response(
         self,
-        chat_history: List[Tuple[str, str]],
         file: _TemporaryFileWrapper,
+        chat_history: List[Tuple[str, str]],
         rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
     ):
+        """Generate the response from rag, and capture the stdout (similarity search result) 
+        of the rag.
+        """
         file_path: PathLike[str] = cast(PathLike[str], file.name)
         save_dir: PathLike[str] = cast(PathLike[str], f"saved_index/{hash_file(file)}")
 
@@ -47,6 +50,7 @@ class ChatbotInterface(ChatEngineBuilder):
         chat_engine = self.build_chat_engine(
             cast(List[Document], nodes), save_dir, rag_type
         )
+        self.chat_engine = chat_engine
 
         with Capturing() as output:
             response = chat_engine.stream_chat(chat_history[-1][0])
@@ -56,3 +60,8 @@ class ChatbotInterface(ChatEngineBuilder):
         for token in response.response_gen:
             chat_history[-1][1] += token  # type: ignore
             yield chat_history, str(html_output)
+
+    def reset_chat(self) -> Tuple[List, str, str]:
+        """Reset the agent's chat history. And clear all dialogue boxes."""
+        self.chat_engine.reset()
+        return [], "", ""

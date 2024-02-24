@@ -1,7 +1,7 @@
-from tempfile import _TemporaryFileWrapper
-from typing import List, Tuple, Generator, Literal
+from typing import List, Tuple, Dict
 
 import gradio as gr
+from backend import ChatbotInterface
 
 
 css = """
@@ -14,27 +14,14 @@ h1 {
 """
 
 
-def add_text(chat_history: List[Tuple[str, str]], query: str):
+def add_text(
+    chat_history: List[Tuple[str, str]], query: str
+) -> Tuple[List[Tuple[str, str]], Dict]:
     chat_history += [(query, "")]
     return chat_history, gr.update(value="", interactive=False)
 
 
-# def generate_response(
-#     file: _TemporaryFileWrapper,
-#     chat_history: List[Tuple[str, str]],
-#     rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
-# ) -> Generator[str, List[Tuple[str, str]], str]:
-#     chat_engine = execute(file, rag_type)
-
-#     with Capturing() as output:
-#         response = chat_engine.stream_chat(chat_history[-1][0])
-
-#     ansi = "\n========\n".join(output)
-#     html_output = Ansi2HTMLConverter().convert(ansi)
-#     for token in response.response_gen:
-#         chat_history[-1][1] += token
-#         yield chat_history, str(html_output)
-
+chatbot_interface = ChatbotInterface()
 
 #! Take care of multiple files
 with gr.Blocks(css=css) as demo:
@@ -67,16 +54,17 @@ with gr.Blocks(css=css) as demo:
 
     with gr.Row():
         btn = gr.Button(value="Submit")
-        clear = gr.ClearButton([query, chatbot, console], variant="primary")
+        clear_btn = gr.ClearButton([query, chatbot, console], variant="primary")
 
-    # file.upload(fn=lambda x: x.name, inputs=file, outputs=query)
+    clear_btn.click(chatbot_interface.reset_chat, None, [chatbot, query, console])
+
     response = gr.on(
         triggers=[btn.click, query.submit],
         fn=add_text,
         inputs=[chatbot, query],
         outputs=[chatbot, query],
     ).then(
-        fn=generate_response,
+        fn=chatbot_interface.generate_response,
         inputs=[file, chatbot, rag_type],
         outputs=[chatbot, console],
     )
