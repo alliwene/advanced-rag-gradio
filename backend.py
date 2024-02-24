@@ -40,7 +40,7 @@ class ChatbotInterface(ChatEngineBuilder):
         of the rag.
         """
         file_path: PathLike[str] = cast(PathLike[str], file.name)
-        save_dir: PathLike[str] = cast(PathLike[str], f"saved_index/{hash_file(file)}")
+        save_dir: PathLike[str] = cast(PathLike[str], f"saved_index/{rag_type}/{hash_file(file)}")
 
         documents = SimpleDirectoryReader(input_files=[file_path]).load_data()
 

@@ -11,6 +11,8 @@ h1 {
 }
 
 #box { height: 420px; overflow-y: scroll !important}
+
+#upload { height: 120px; overflow-y: scroll !important}
 """
 
 
@@ -28,20 +30,25 @@ with gr.Blocks(css=css) as demo:
     gr.Markdown("# ADVANCED RAG GPT")
 
     with gr.Row():
-        chatbot = gr.Chatbot(
-            label="Message History",
-            scale=2,
+        chatbot = gr.Chatbot(label="Message History", scale=2, height="450px")
+        console = gr.TextArea(
+            label="Similarity Search Results",
+            show_copy_button=True,
+            lines=18,
+            max_lines=20,
         )
-        console = gr.HTML(elem_id="box")
 
     with gr.Row():
-        query = gr.Textbox(placeholder="Input your question...", scale=4)
+        query = gr.Textbox(
+            placeholder="Input your question...", scale=4, show_copy_button=True
+        )
 
         file = gr.File(
             type="filepath",
             label="Upload a file",
             height=0.1,
             file_types=["text", ".pdf"],
+            elem_id="upload",
         )
 
         rag_type = gr.Dropdown(
@@ -49,7 +56,7 @@ with gr.Blocks(css=css) as demo:
             value="basic",
             label="RAG Type",
             max_choices=1,
-            info="testing testing",
+            info="Select the type of RAG to use",
         )
 
     with gr.Row():
