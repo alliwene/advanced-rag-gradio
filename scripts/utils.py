@@ -31,8 +31,7 @@ class QueryParams(TypedDict):
 
 class Capturing(list):
     """To capture the stdout from ReActAgent.chat with verbose=True. Taken from
-    https://stackoverflow.com/questions/16571150/\
-        how-to-capture-stdout-output-from-a-python-function-call
+    https://stackoverflow.com/questions/16571150/how-to-capture-stdout-output-from-a-python-function-call
     """
 
     def __enter__(self):

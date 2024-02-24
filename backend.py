@@ -7,7 +7,6 @@ from scripts.utils import get_openai_api_key, hash_file, Capturing, RAGType
 from scripts.chat_engine_builder import ChatEngineBuilder
 
 import openai
-from ansi2html import Ansi2HTMLConverter
 from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core import SimpleDirectoryReader, Document
@@ -41,7 +40,7 @@ class ChatbotInterface(ChatEngineBuilder):
         """
         file_path: PathLike[str] = cast(PathLike[str], file.name)
         save_dir: PathLike[str] = cast(
-            PathLike[str], f"saved_index/{rag_type}/{hash_file(file)}"
+            PathLike[str], f"saved_index/{hash_file(file)}/{rag_type}"
         )
 
         documents = SimpleDirectoryReader(input_files=[file_path]).load_data()
@@ -57,13 +56,12 @@ class ChatbotInterface(ChatEngineBuilder):
         with Capturing() as output:
             response = chat_engine.stream_chat(chat_history[-1][0])
 
-        output_text = "\n========\n".join(output)
-        # html_output = Ansi2HTMLConverter().convert(ansi)
+        output_text = "\n".join(output)
         for token in response.response_gen:
             chat_history[-1][1] += token  # type: ignore
             yield chat_history, str(output_text)
 
     def reset_chat(self) -> Tuple[List, str, str]:
-        """Reset the agent's chat history. And clear all dialogue boxes."""
+        """Reset the chat history. And clear all dialogue boxes."""
         self.chat_engine.reset()
         return [], "", ""
