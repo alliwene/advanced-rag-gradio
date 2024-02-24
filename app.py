@@ -10,8 +10,6 @@ h1 {
     display:block;
 }
 
-#box { height: 420px; overflow-y: scroll !important}
-
 #upload { height: 120px; overflow-y: scroll !important}
 """
 
@@ -30,11 +28,11 @@ with gr.Blocks(css=css) as demo:
     gr.Markdown("# ADVANCED RAG GPT")
 
     with gr.Row():
-        chatbot = gr.Chatbot(label="Message History", scale=2, height="450px")
+        chatbot = gr.Chatbot(label="Message History", scale=2, height="460px")
         console = gr.TextArea(
             label="Similarity Search Results",
             show_copy_button=True,
-            lines=18,
+            lines=20,
             max_lines=20,
         )
 
@@ -52,7 +50,7 @@ with gr.Blocks(css=css) as demo:
         )
 
         rag_type = gr.Dropdown(
-            ["basic", "sentence_window", "auto_merging"],
+            chatbot_interface.rag_types,
             value="basic",
             label="RAG Type",
             max_choices=1,

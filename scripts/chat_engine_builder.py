@@ -1,8 +1,8 @@
 import warnings
 from os import PathLike
-from typing import List, Literal
+from typing import List
 
-from scripts.utils import IndexParams, QueryParams
+from scripts.utils import IndexParams, QueryParams, RAGType
 
 from scripts.basic_rag.build_index import build_basic_rag_index
 from scripts.basic_rag.chat_engine import build_basic_rag_chat_engine
@@ -35,11 +35,13 @@ class ChatEngineBuilder:
         self.embed_model = embed_model
         self.llm = llm
 
+        self.rag_types: RAGType = ["basic", "sentence_window", "auto_merging"]
+
     def build_index(
         self,
         documents: List[Document],
         save_dir: PathLike[str],
-        rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
+        rag_type: RAGType = "basic",
         window_size: int = 3,
         chunk_sizes: List[int] | None = None,
     ) -> BaseIndex:
@@ -70,7 +72,7 @@ class ChatEngineBuilder:
         self,
         documents: List[Document],
         save_dir: PathLike[str],
-        rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
+        rag_type: RAGType = "basic",
         similarity_top_k: int = 6,
         rerank_top_n: int = 2,
     ) -> BaseChatEngine:

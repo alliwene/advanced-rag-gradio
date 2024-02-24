@@ -1,9 +1,9 @@
 import os
 from os import PathLike
-from typing import List, Literal, Tuple, cast
+from typing import List, Tuple, cast
 from tempfile import _TemporaryFileWrapper
 
-from scripts.utils import get_openai_api_key, hash_file, Capturing
+from scripts.utils import get_openai_api_key, hash_file, Capturing, RAGType
 from scripts.chat_engine_builder import ChatEngineBuilder
 
 import openai
@@ -34,13 +34,15 @@ class ChatbotInterface(ChatEngineBuilder):
         self,
         file: _TemporaryFileWrapper,
         chat_history: List[Tuple[str, str]],
-        rag_type: Literal["basic", "sentence_window", "auto_merging"] = "basic",
+        rag_type: RAGType = "basic",
     ):
-        """Generate the response from rag, and capture the stdout (similarity search result) 
+        """Generate the response from rag, and capture the stdout (similarity search result)
         of the rag.
         """
         file_path: PathLike[str] = cast(PathLike[str], file.name)
-        save_dir: PathLike[str] = cast(PathLike[str], f"saved_index/{rag_type}/{hash_file(file)}")
+        save_dir: PathLike[str] = cast(
+            PathLike[str], f"saved_index/{rag_type}/{hash_file(file)}"
+        )
 
         documents = SimpleDirectoryReader(input_files=[file_path]).load_data()
 
@@ -55,11 +57,11 @@ class ChatbotInterface(ChatEngineBuilder):
         with Capturing() as output:
             response = chat_engine.stream_chat(chat_history[-1][0])
 
-        ansi = "\n========\n".join(output)
-        html_output = Ansi2HTMLConverter().convert(ansi)
+        output_text = "\n========\n".join(output)
+        # html_output = Ansi2HTMLConverter().convert(ansi)
         for token in response.response_gen:
             chat_history[-1][1] += token  # type: ignore
-            yield chat_history, str(html_output)
+            yield chat_history, str(output_text)
 
     def reset_chat(self) -> Tuple[List, str, str]:
         """Reset the agent's chat history. And clear all dialogue boxes."""

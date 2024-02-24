@@ -5,7 +5,7 @@ from dotenv import load_dotenv, find_dotenv
 from tempfile import _TemporaryFileWrapper
 from io import StringIO
 import sys
-from typing import TypedDict, List
+from typing import TypedDict, List, Literal
 
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core import Document
@@ -13,6 +13,7 @@ from llama_index.core.embeddings.utils import EmbedType
 from llama_index.core.llms.utils import LLMType
 from llama_index.core.indices.base import BaseIndex
 
+RAGType = Literal["basic", "sentence_window", "auto_merging"]
 memory = ChatMemoryBuffer.from_defaults(token_limit=3900)
 
 
