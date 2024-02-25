@@ -35,7 +35,7 @@ class ChatEngineBuilder:
         self.embed_model = embed_model
         self.llm = llm
 
-        self.rag_types: RAGType = ["basic", "sentence_window", "auto_merging"]
+        self.rag_types: List[str] = ["basic", "sentence_window", "auto_merging"]
 
     def build_index(
         self,
@@ -73,12 +73,13 @@ class ChatEngineBuilder:
         documents: List[Document],
         save_dir: PathLike[str],
         rag_type: RAGType = "basic",
+        window_size: int = 3,
         similarity_top_k: int = 6,
         rerank_top_n: int = 2,
     ) -> BaseChatEngine:
 
         query_params: QueryParams = {
-            "index": self.build_index(documents, save_dir, rag_type),
+            "index": self.build_index(documents, save_dir, rag_type, window_size),
             "similarity_top_k": similarity_top_k,
             "llm": self.llm,
         }

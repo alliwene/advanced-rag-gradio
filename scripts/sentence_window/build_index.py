@@ -1,4 +1,5 @@
 import os
+from os import PathLike
 from typing import List, cast
 
 from llama_index.core.node_parser import SentenceWindowNodeParser
@@ -12,8 +13,8 @@ from scripts.load_index import index_from_storage
 def build_sentence_window_index(
     documents: List[Document],
     embed_model: EmbedType,
-    save_dir="sentence_index",
-    window_size=3,
+    save_dir: PathLike[str],
+    window_size: int = 3,
 ) -> BaseIndex:
     # create the sentence window node parser w/ default settings
     node_parser = SentenceWindowNodeParser.from_defaults(
