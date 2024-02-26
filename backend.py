@@ -23,6 +23,9 @@ api_keys: List[str] = ["OPENAI_API_KEY"]
 assert any(os.getenv(api_key, None) for api_key in api_keys), (
     "Add " + " ".join(api_keys) + " in your environment variables"
 )
+assert get_openai_api_key().startswith(
+    "sk-"
+), "This doesn't look like a valid OpenAI API key"
 
 
 class ChatbotInterface(ChatEngineBuilder):

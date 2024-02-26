@@ -45,16 +45,16 @@ class Capturing(list):
         sys.stdout = self._stdout
 
 
-def get_openai_api_key():
+def get_openai_api_key() -> str:
     _ = load_dotenv(find_dotenv())
 
-    return os.getenv("OPENAI_API_KEY")
+    return os.getenv("OPENAI_API_KEY", "")
 
 
-def get_hf_api_key():
+def get_hf_api_key() -> str:
     _ = load_dotenv(find_dotenv())
 
-    return os.getenv("HUGGINGFACE_API_KEY")
+    return os.getenv("HUGGINGFACE_API_KEY", "")
 
 
 def hash_file(file: _TemporaryFileWrapper):
