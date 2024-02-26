@@ -30,10 +30,11 @@ with gr.Blocks(css=css) as demo:
     with gr.Row():
         chatbot = gr.Chatbot(label="Message History", scale=2, height="460px")
         console = gr.TextArea(
-            label="Similarity Search Results",
+            label="Console",
+            info="Contains token usage and similarity search result",
             show_copy_button=True,
-            lines=20,
-            max_lines=20,
+            lines=18,
+            max_lines=18,
         )
 
     with gr.Row():

@@ -7,11 +7,20 @@ from scripts.utils import get_openai_api_key, hash_file, Capturing, RAGType
 from scripts.chat_engine_builder import ChatEngineBuilder
 
 import openai
+import tiktoken
 from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core import SimpleDirectoryReader, Document
 from llama_index.core.node_parser import SentenceSplitter
+from llama_index.core.callbacks import CallbackManager, TokenCountingHandler
+from llama_index.core import Settings
 
+token_counter = TokenCountingHandler(
+    tokenizer=tiktoken.encoding_for_model("gpt-3.5-turbo").encode,
+    verbose=True,
+)
+
+Settings.callback_manager = CallbackManager([token_counter])
 
 openai.api_key = get_openai_api_key()
 
@@ -31,6 +40,7 @@ assert get_openai_api_key().startswith(
 class ChatbotInterface(ChatEngineBuilder):
     def __init__(self):
         super().__init__(llm, embed_model)
+        self.token_counter = token_counter
 
     def generate_response(
         self,
@@ -68,3 +78,18 @@ class ChatbotInterface(ChatEngineBuilder):
         """Reset the chat history. And clear all dialogue boxes."""
         self.chat_engine.reset()
         return [], "", ""
+
+    def _token_usage(self) -> None:
+        print(
+            "Embedding Tokens: ",
+            token_counter.total_embedding_token_count,
+            "\n",
+            "LLM Prompt Tokens: ",
+            token_counter.prompt_llm_token_count,
+            "\n",
+            "LLM Completion Tokens: ",
+            token_counter.completion_llm_token_count,
+            "\n",
+            "Total LLM Token Count: ",
+            token_counter.total_llm_token_count,
+        )
