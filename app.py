@@ -1,5 +1,10 @@
 import gradio as gr
 
+from backend import ChabotInterface
+
+chatbot_interface = ChabotInterface()
+
+chatbot_interface._token_count()
 css = """
 h1 {
     text-align: center;
