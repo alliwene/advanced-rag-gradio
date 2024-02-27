@@ -9,3 +9,5 @@ __pycache__
 explain.ipynb
 test.ipynb
 *_chatbot/
+wandb/
+.mypy_cache/

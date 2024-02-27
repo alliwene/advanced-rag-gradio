@@ -1,8 +1,0 @@
-[34m[1mwandb[39m[22m: Streaming LlamaIndex events to W&B at https://wandb.ai/alliwene/llamaindex-advanced-rag/runs/19uic6jz
-[34m[1mwandb[39m[22m: `WandbCallbackHandler` is currently in beta.
-[34m[1mwandb[39m[22m: Please report any issues to https://github.com/wandb/wandb/issues with the tag `llamaindex`.
-Running on local URL:  http://127.0.0.1:7860
-To create a public link, set `share=True` in `launch()`.
-[34m[1mwandb[39m[22m: Logged trace tree to W&B.
-Embedding Token Usage: 447
-Failed to log trace tree to W&B: list index out of range
