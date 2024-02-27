@@ -13,7 +13,10 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core import SimpleDirectoryReader, Document
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core.callbacks import CallbackManager, TokenCountingHandler
-from llama_index.core import Settings
+from llama_index.core import Settings, set_global_handler, global_handler
+
+set_global_handler("wandb", run_args={"project": "llamaindex-advanced-rag"})
+wandb_callback = global_handler
 
 token_counter = TokenCountingHandler(
     tokenizer=tiktoken.encoding_for_model("gpt-3.5-turbo").encode,
@@ -67,7 +70,7 @@ class ChatbotInterface(ChatEngineBuilder):
         self.chat_engine = chat_engine
 
         with Capturing() as output:
-            response = chat_engine.stream_chat(chat_history[-1][0])
+            response = self.chat_engine.stream_chat(chat_history[-1][0])
 
         output_text = "\n".join(output)
         for token in response.response_gen:

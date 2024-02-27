@@ -1,6 +1,6 @@
 import warnings
 from os import PathLike
-from typing import List
+from typing import List, Optional
 
 from scripts.utils import IndexParams, QueryParams, RAGType
 
@@ -43,7 +43,7 @@ class ChatEngineBuilder:
         save_dir: PathLike[str],
         rag_type: RAGType = "basic",
         window_size: int = 3,
-        chunk_sizes: List[int] | None = None,
+        chunk_sizes: Optional[List[int]] = None,
     ) -> BaseIndex:
         index_params: IndexParams = {
             "documents": documents,

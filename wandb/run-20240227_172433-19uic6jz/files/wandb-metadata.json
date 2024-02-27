@@ -1,0 +1,100 @@
+{
+    "os": "Linux-6.5.0-21-generic-x86_64-with-glibc2.38",
+    "python": "3.11.7",
+    "heartbeatAt": "2024-02-27T16:24:35.756916",
+    "startedAt": "2024-02-27T16:24:33.447384",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/home/alli/Documents/GitHub/advanced-rag-gradio/app.py",
+    "codePathLocal": "app.py",
+    "codePath": "app.py",
+    "git": {
+        "remote": "https://github.com/alliwene/advanced-rag-gradio.git",
+        "commit": "b87338d3ad0491328116e1ae9f3150553cf6cd69"
+    },
+    "email": "allisonabiodun@gmail.com",
+    "root": "/home/alli/Documents/GitHub/advanced-rag-gradio",
+    "host": "alli-pc",
+    "username": "alli",
+    "executable": "/home/alli/miniconda3/envs/rag/bin/python3.11",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 900.0106666666667,
+        "min": 800.0,
+        "max": 4600.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 899.86,
+            "min": 800.0,
+            "max": 4600.0
+        },
+        {
+            "current": 900.249,
+            "min": 800.0,
+            "max": 4600.0
+        },
+        {
+            "current": 899.834,
+            "min": 800.0,
+            "max": 4600.0
+        },
+        {
+            "current": 900.133,
+            "min": 800.0,
+            "max": 4600.0
+        },
+        {
+            "current": 900.0,
+            "min": 800.0,
+            "max": 4600.0
+        },
+        {
+            "current": 900.0,
+            "min": 800.0,
+            "max": 4600.0
+        },
+        {
+            "current": 899.795,
+            "min": 800.0,
+            "max": 4600.0
+        },
+        {
+            "current": 899.999,
+            "min": 800.0,
+            "max": 4600.0
+        },
+        {
+            "current": 900.124,
+            "min": 800.0,
+            "max": 4600.0
+        },
+        {
+            "current": 900.045,
+            "min": 800.0,
+            "max": 4600.0
+        },
+        {
+            "current": 899.701,
+            "min": 800.0,
+            "max": 4600.0
+        },
+        {
+            "current": 900.019,
+            "min": 800.0,
+            "max": 4600.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 456.8854446411133,
+            "used": 347.8978843688965
+        }
+    },
+    "memory": {
+        "total": 23.246063232421875
+    }
+}
