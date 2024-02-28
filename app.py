@@ -28,7 +28,12 @@ with gr.Blocks(css=css) as demo:
     gr.Markdown("# ADVANCED RAG GPT")
 
     with gr.Row():
-        chatbot = gr.Chatbot(label="Message History", scale=2, height="460px")
+        chatbot = gr.Chatbot(
+            label="Message History",
+            scale=2,
+            height="460px",
+            avatar_images=("images/user.jpg", "images/bot.png"),
+        )
         console = gr.TextArea(
             label="Console",
             info="Contains token usage and similarity search result",

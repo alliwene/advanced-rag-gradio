@@ -8,12 +8,17 @@ from scripts.chat_engine_builder import ChatEngineBuilder
 
 import openai
 import tiktoken
+import pandas as pd
 from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core import SimpleDirectoryReader, Document
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core.callbacks import CallbackManager, TokenCountingHandler
 from llama_index.core import Settings, set_global_handler, global_handler
+
+
+pd.set_option("display.max_colwidth", None)
+
 
 set_global_handler("wandb", run_args={"project": "llamaindex-advanced-rag"})
 wandb_callback = global_handler
@@ -50,7 +55,7 @@ class ChatbotInterface(ChatEngineBuilder):
         file: _TemporaryFileWrapper,
         chat_history: List[Tuple[str, str]],
         rag_type: RAGType = "basic",
-    ):
+    ) -> Tuple[List[Tuple[str, str]], str] | str:
         """Generate the response from rag, and capture the stdout (similarity search result)
         of the rag.
         """
@@ -75,7 +80,12 @@ class ChatbotInterface(ChatEngineBuilder):
         output_text = "\n".join(output)
         for token in response.response_gen:
             chat_history[-1][1] += token  # type: ignore
-            yield chat_history, str(output_text)
+            return (
+                chat_history,
+                str(output_text),
+            )
+
+        return ""
 
     def reset_chat(self) -> Tuple[List, str, str]:
         """Reset the chat history. And clear all dialogue boxes."""

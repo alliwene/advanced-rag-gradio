@@ -20,9 +20,6 @@ from llama_index.core.embeddings.utils import EmbedType
 from llama_index.core.llms.utils import LLMType
 
 
-# import nest_asyncio
-
-# nest_asyncio.apply()
 warnings.filterwarnings("ignore")
 
 

@@ -11,3 +11,4 @@ test.ipynb
 *_chatbot/
 wandb/
 .mypy_cache/
+db/
