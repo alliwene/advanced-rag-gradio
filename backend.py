@@ -43,6 +43,8 @@ class ChabotInterface(ChatEngineBuilder):
         file: _TemporaryFileWrapper,
         chat_history: List[Tuple[str, str]],
         rag_type: RAGType = "basic",
+        window_size: int = 3,
+        rerank_top_n: int = 2,
     ):
         file_path: PathLike[str] = cast(PathLike[str], file.name)
         save_dir: PathLike[str] = cast(
@@ -55,7 +57,11 @@ class ChabotInterface(ChatEngineBuilder):
         nodes = parser.get_nodes_from_documents(documents)
 
         chat_engine = self.build_chat_engine(
-            cast(List[Document], nodes), save_dir, rag_type
+            cast(List[Document], nodes),
+            save_dir,
+            rag_type,
+            window_size,
+            rerank_top_n=rerank_top_n,
         )
         self.chat_engine = chat_engine
 
@@ -65,7 +71,7 @@ class ChabotInterface(ChatEngineBuilder):
         output_text = "\n".join(output)
         for token in response.response_gen:
             chat_history[-1][1] += token  # type: ignore
-            return chat_history, str(output_text)
+            yield chat_history, str(output_text)
 
     def reset_chat(self) -> Tuple[List, str, str]:
         self.chat_engine.reset()

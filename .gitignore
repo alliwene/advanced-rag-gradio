@@ -2,6 +2,7 @@
 *.sqlite
 __pycache__
 .streamlit
+.deepeval
 
 *_index/
 *_index_*/
@@ -9,5 +10,6 @@ __pycache__
 explain.ipynb
 test.ipynb
 *_chatbot/
+wandb/
 
 .mypy_cache/

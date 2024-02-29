@@ -12,8 +12,8 @@ from llama_index.core.chat_engine.types import ChatMode, BaseChatEngine
 def build_sentence_window_chat_engine(
     llm: LLMType,
     index: BaseIndex,
-    similarity_top_k=6,
-    rerank_top_n=2,
+    similarity_top_k: int = 6,
+    rerank_top_n: int = 2,
 ) -> BaseChatEngine:
     # define postprocessors
     postproc = MetadataReplacementPostProcessor(target_metadata_key="window")
