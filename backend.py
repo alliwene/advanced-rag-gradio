@@ -8,20 +8,20 @@ from scripts.chat_engine_builder import ChatEngineBuilder
 
 import openai
 import tiktoken
-import pandas as pd
+import phoenix as px
 from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core import SimpleDirectoryReader, Document
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core.callbacks import CallbackManager, TokenCountingHandler
-from llama_index.core import Settings, set_global_handler, global_handler
+from llama_index.core import Settings, set_global_handler
 
+session = px.launch_app()
 
-pd.set_option("display.max_colwidth", None)
+set_global_handler("arize_phoenix")
+# set_global_handler("deepeval")
+# set_global_handler("wandb", run_args={"project": "llamaindex-advanced-rag"})
 
-
-set_global_handler("wandb", run_args={"project": "llamaindex-advanced-rag"})
-# wandb_callback = global_handler
 
 token_counter = TokenCountingHandler(
     tokenizer=tiktoken.encoding_for_model("gpt-3.5-turbo").encode,
