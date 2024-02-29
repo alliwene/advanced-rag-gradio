@@ -8,13 +8,23 @@ from scripts.chat_engine_builder import ChatEngineBuilder
 
 import openai
 import tiktoken
-import phoenix as px
 from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core import SimpleDirectoryReader, Document
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core.callbacks import CallbackManager, TokenCountingHandler
 from llama_index.core import Settings, set_global_handler
+
+import phoenix as px
+from phoenix.experimental.evals import (
+    HallucinationEvaluator,
+    OpenAIModel,
+    QAEvaluator,
+    RelevanceEvaluator,
+    run_evals,
+)
+from phoenix.session.evaluation import get_qa_with_reference, get_retrieved_documents
+
 
 session = px.launch_app()
 
