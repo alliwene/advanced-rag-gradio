@@ -27,7 +27,6 @@ def build_sentence_window_chat_engine(
         similarity_top_k=similarity_top_k,
         chat_mode=ChatMode.CONDENSE_PLUS_CONTEXT,
         node_postprocessors=[postproc, rerank],
-        streaming=True,
         verbose=True,
     )
 

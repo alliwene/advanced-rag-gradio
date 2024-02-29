@@ -39,7 +39,6 @@ def build_automerging_chat_engine(
         memory=memory,
         query_engine=auto_merging_engine,
         verbose=True,
-        streaming=True,
     )
 
     return chat_engine

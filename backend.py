@@ -21,7 +21,7 @@ pd.set_option("display.max_colwidth", None)
 
 
 set_global_handler("wandb", run_args={"project": "llamaindex-advanced-rag"})
-wandb_callback = global_handler
+# wandb_callback = global_handler
 
 token_counter = TokenCountingHandler(
     tokenizer=tiktoken.encoding_for_model("gpt-3.5-turbo").encode,
@@ -55,7 +55,7 @@ class ChatbotInterface(ChatEngineBuilder):
         file: _TemporaryFileWrapper,
         chat_history: List[Tuple[str, str]],
         rag_type: RAGType = "basic",
-    ) -> Tuple[List[Tuple[str, str]], str] | str:
+    ):
         """Generate the response from rag, and capture the stdout (similarity search result)
         of the rag.
         """
@@ -80,12 +80,12 @@ class ChatbotInterface(ChatEngineBuilder):
         output_text = "\n".join(output)
         for token in response.response_gen:
             chat_history[-1][1] += token  # type: ignore
-            return (
+            yield (
                 chat_history,
                 str(output_text),
             )
 
-        return ""
+        # return ""
 
     def reset_chat(self) -> Tuple[List, str, str]:
         """Reset the chat history. And clear all dialogue boxes."""

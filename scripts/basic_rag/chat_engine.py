@@ -14,7 +14,6 @@ def build_basic_rag_chat_engine(
         similiarity_top_k=similarity_top_k,
         memory=memory,
         verbose=True,
-        streaming=True,
     )
 
     return query_engine
